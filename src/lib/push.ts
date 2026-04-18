@@ -1,11 +1,14 @@
 import webpush from 'web-push'
 import prisma from './prisma'
 
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-)
+function initWebPush() {
+  webpush.setVapidDetails(
+    process.env.VAPID_EMAIL!,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  )
+  return webpush
+}
 
 export interface PushPayload {
   title: string
@@ -28,7 +31,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
   await Promise.allSettled(
     subscriptions.map(async (sub) => {
       try {
-        await webpush.sendNotification(
+        await initWebPush().sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify(payload)
         )
