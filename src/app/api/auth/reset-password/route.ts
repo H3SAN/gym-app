@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import prisma from '@/lib/prisma'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { token, password } = await request.json()

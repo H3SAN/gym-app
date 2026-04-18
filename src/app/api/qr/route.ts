@@ -6,6 +6,8 @@ import { randomBytes } from 'crypto'
 import { apiError, ErrorCode } from '@/lib/api-error'
 import { rateLimits, rateLimitError } from '@/lib/rate-limit'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { user, error } = await requireAuth(request)
   if (error || !user) {

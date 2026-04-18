@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 // Session durations per type
 const SESSION_DURATION: Record<string, number> = {
   STANDARD: 60,

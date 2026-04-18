@@ -4,6 +4,8 @@ import { requireAdmin } from '@/lib/auth'
 import { startOfDay, endOfDay, startOfMonth, endOfMonth, subMonths, subDays, format } from 'date-fns'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { user, error } = await requireAdmin(request)
   if (error || !user) {

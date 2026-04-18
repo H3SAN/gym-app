@@ -3,6 +3,8 @@ import Stripe from 'stripe'
 import { requireAuth } from '@/lib/auth'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!) as any
 

@@ -5,6 +5,8 @@ import { signToken } from '@/lib/jwt'
 import { apiError, ErrorCode } from '@/lib/api-error'
 import { rateLimits, rateLimitError } from '@/lib/rate-limit'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const rl = rateLimits.strict(request, 'signup')
   if (!rl.allowed) return rateLimitError()

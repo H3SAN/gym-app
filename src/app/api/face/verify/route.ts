@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 const THRESHOLD = 0.6 // face-api.js recommended match threshold
 
 function euclidean(a: number[], b: number[]): number {

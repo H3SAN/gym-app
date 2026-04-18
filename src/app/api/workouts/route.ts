@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { WeightUnit } from '@prisma/client'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { user, error } = await requireAuth(request)
   if (error || !user) {

@@ -5,6 +5,8 @@ import { randomBytes } from 'crypto'
 import { apiError, ErrorCode } from '@/lib/api-error'
 import { rateLimits, rateLimitError } from '@/lib/rate-limit'
 
+export const dynamic = 'force-dynamic'
+
 /** Generate a short, readable referral code like "AVG-X4K9" */
 function generateCode(): string {
   return 'AVG-' + randomBytes(3).toString('hex').toUpperCase()

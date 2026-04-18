@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma'
 import { requireAdmin } from '@/lib/auth'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, format, subWeeks, subMonths } from 'date-fns'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { user, error } = await requireAuth(request)
   if (error || !user) {

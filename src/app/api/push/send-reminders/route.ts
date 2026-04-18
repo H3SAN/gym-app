@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { sendClassReminders } from '@/lib/push'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/push/send-reminders
  * Sends push notifications for classes starting within the next 60 minutes.

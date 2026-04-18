@@ -5,6 +5,8 @@ import { sendPushToUser } from '@/lib/push'
 import { format } from 'date-fns'
 import { apiError, ErrorCode } from '@/lib/api-error'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
