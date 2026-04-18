@@ -6,7 +6,7 @@ import { apiError, ErrorCode } from '@/lib/api-error'
 export const dynamic = 'force-dynamic'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!) as any
+function getStripe() { return new Stripe(process.env.STRIPE_SECRET_KEY!) as any }
 
 const MEMBERSHIP_PRICES: Record<string, number> = {
   PRO: 2999,   // $29.99
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount: MEMBERSHIP_PRICES[tier],
       currency: 'usd',
       metadata: {

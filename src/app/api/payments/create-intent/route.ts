@@ -6,9 +6,9 @@ import { apiError, ErrorCode } from '@/lib/api-error'
 
 export const dynamic = 'force-dynamic'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-03-25.dahlia',
-})
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+}
 
 interface OrderItemInput {
   productId: string
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Stripe PaymentIntent (amount in cents)
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount: Math.round(total * 100),
       currency: 'usd',
       metadata: { userId: user.id },
