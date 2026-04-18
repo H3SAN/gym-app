@@ -20,8 +20,10 @@ import {
   Bell,
   BellOff,
 } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
-import FaceEnroll from '@/components/face/FaceEnroll'
+
+const FaceEnroll = dynamic(() => import('@/components/face/FaceEnroll'), { ssr: false })
 
 export default function ProfilePage() {
   const router = useRouter()

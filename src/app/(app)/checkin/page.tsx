@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useAuthStore } from '@/components/auth/AuthProvider'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, RefreshCw, Shield, QrCode, ScanFace } from 'lucide-react'
-import FaceVerify from '@/components/face/FaceVerify'
+
+const FaceVerify = dynamic(() => import('@/components/face/FaceVerify'), { ssr: false })
 
 const QR_LIFETIME = 60 // seconds
 
