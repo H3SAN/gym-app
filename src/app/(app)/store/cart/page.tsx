@@ -271,22 +271,20 @@ export default function CartPage() {
         </div>
 
         {/* Step indicator */}
-        {step !== 'confirmation' && (
-          <div className="flex items-center gap-1">
-            {steps.map((s, i) => (
-              <div key={s.key} className="flex items-center gap-1 flex-1">
-                <div
-                  className={`h-1.5 flex-1 rounded-full transition-colors ${
-                    i <= stepIndex ? 'bg-green-600' : 'bg-gray-200'
-                  }`}
-                />
-                {i < steps.length - 1 && (
-                  <ChevronRight size={10} className={i < stepIndex ? 'text-green-600' : 'text-gray-300'} />
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="flex items-center gap-1">
+          {steps.map((s, i) => (
+            <div key={s.key} className="flex items-center gap-1 flex-1">
+              <div
+                className={`h-1.5 flex-1 rounded-full transition-colors ${
+                  i <= stepIndex ? 'bg-green-600' : 'bg-gray-200'
+                }`}
+              />
+              {i < steps.length - 1 && (
+                <ChevronRight size={10} className={i < stepIndex ? 'text-green-600' : 'text-gray-300'} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="px-4 py-4">
