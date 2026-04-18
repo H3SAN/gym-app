@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomBytes } from 'crypto'
 import prisma from '@/lib/prisma'
-import { resend, FROM_EMAIL } from '@/lib/resend'
+import { getResend, FROM_EMAIL } from '@/lib/resend'
 import { apiError, ErrorCode } from '@/lib/api-error'
 import { rateLimits, rateLimitError } from '@/lib/rate-limit'
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     const resetUrl = `${appUrl}/reset-password?token=${token}`
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: 'Reset your Avengers Gym password',
