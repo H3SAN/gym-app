@@ -19,6 +19,7 @@ const FILES = [
   'face_landmark_68_tiny_model-shard1',
   'face_recognition_model-weights_manifest.json',
   'face_recognition_model-shard1',
+  'face_recognition_model-shard2',
 ]
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true })
