@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Dumbbell, ShoppingBag, Users, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, Dumbbell, ShoppingBag, Users, ClipboardList, ScanFace } from 'lucide-react'
 
 const tabs = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const tabs = [
   { label: 'Products', href: '/admin/products', icon: ShoppingBag },
   { label: 'Members', href: '/admin/members', icon: Users },
   { label: 'Plans', href: '/admin/workout-plans', icon: ClipboardList },
+  { label: 'Check-ins', href: '/admin/checkins', icon: ScanFace },
 ]
 
 export default function AdminNav() {

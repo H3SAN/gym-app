@@ -38,6 +38,17 @@ enum OrderStatus {
   DELIVERED
 }
 
+enum CheckInStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CheckInMethod {
+  QR
+  FACE
+}
+
 enum WeightUnit {
   KG
   LBS
@@ -197,14 +208,18 @@ model WorkoutExercise {
 }
 
 model CheckInLog {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   userId      String
-  checkedInAt DateTime @default(now())
+  checkedInAt DateTime      @default(now())
   deviceId    String?
   qrToken     String
-  isValid     Boolean  @default(true)
+  isValid     Boolean       @default(true)
+  method      CheckInMethod @default(QR)
+  status      CheckInStatus @default(APPROVED)
+  reviewedAt  DateTime?
+  reviewedBy  String?
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model QRToken {

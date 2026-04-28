@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
       return apiError('Invalid face embedding', ErrorCode.VALIDATION_INVALID, 400)
     }
 
-    // Verify face
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
       select: { faceEmbedding: true, name: true },
@@ -40,7 +39,6 @@ export async function POST(request: NextRequest) {
       return apiError('Face not recognised', ErrorCode.AUTH_FORBIDDEN, 403)
     }
 
-    // Check active membership
     const membership = await prisma.membership.findFirst({
       where: { userId: user.id, isActive: true, endDate: { gte: new Date() } },
     })
@@ -48,19 +46,21 @@ export async function POST(request: NextRequest) {
       return apiError('No active membership', ErrorCode.MEMBERSHIP_REQUIRED, 403)
     }
 
-    // Log the check-in (qrToken field used as method marker)
+    // Create PENDING check-in — admin must approve
     const checkIn = await prisma.checkInLog.create({
       data: {
         userId: user.id,
         qrToken: `face-${user.id}-${Date.now()}`,
         isValid: true,
+        method: 'FACE',
+        status: 'PENDING',
       },
     })
 
     return NextResponse.json({
-      success: true,
-      checkIn,
-      message: `Welcome, ${dbUser.name}!`,
+      pending: true,
+      checkInId: checkIn.id,
+      message: `Face verified, ${dbUser.name}. Awaiting admin approval.`,
     })
   } catch (err) {
     console.error('[FACE CHECKIN ERROR]', err)

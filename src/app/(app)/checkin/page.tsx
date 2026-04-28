@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { useAuthStore } from '@/components/auth/AuthProvider'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, RefreshCw, Shield, QrCode, ScanFace } from 'lucide-react'
+import { ArrowLeft, RefreshCw, Shield, QrCode, ScanFace, Clock } from 'lucide-react'
 
 const FaceVerify = dynamic(() => import('@/components/face/FaceVerify'), { ssr: false })
 
@@ -16,6 +16,7 @@ export default function CheckInPage() {
   const { token } = useAuthStore()
   const [tab, setTab] = useState<'qr' | 'face'>('qr')
   const [faceSuccess, setFaceSuccess] = useState(false)
+  const [facePending, setFacePending] = useState(false)
   const [qrSrc, setQrSrc] = useState<string | null>(null)
   const [expiresAt, setExpiresAt] = useState<Date | null>(null)
   const [secondsLeft, setSecondsLeft] = useState(QR_LIFETIME)
@@ -105,7 +106,7 @@ export default function CheckInPage() {
           <QrCode size={15} /> QR Code
         </button>
         <button
-          onClick={() => { setTab('face'); setFaceSuccess(false) }}
+          onClick={() => { setTab('face'); setFaceSuccess(false); setFacePending(false) }}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-colors ${
             tab === 'face' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
@@ -131,11 +132,28 @@ export default function CheckInPage() {
                 Done
               </button>
             </div>
+          ) : facePending ? (
+            <div className="flex flex-col items-center justify-center flex-1 gap-3 text-center">
+              <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center">
+                <Clock size={32} className="text-yellow-500" />
+              </div>
+              <p className="text-xl font-bold text-gray-900">Awaiting Approval</p>
+              <p className="text-sm text-gray-500 max-w-xs">
+                Face verified. An admin will review and approve your check-in shortly.
+              </p>
+              <button
+                onClick={() => router.back()}
+                className="mt-4 px-8 py-3 bg-gray-100 text-gray-700 rounded-2xl font-medium hover:bg-gray-200"
+              >
+                Done
+              </button>
+            </div>
           ) : token ? (
             <FaceVerify
               token={token}
               apiEndpoint="/api/face/checkin"
               onVerified={() => setFaceSuccess(true)}
+              onPending={() => setFacePending(true)}
             />
           ) : null}
         </div>

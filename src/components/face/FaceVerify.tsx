@@ -2,18 +2,19 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { useFaceApi } from '@/hooks/useFaceApi'
-import { ScanFace, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { ScanFace, CheckCircle, XCircle, Loader2, Clock } from 'lucide-react'
 
 interface Props {
   token: string
-  onVerified: () => void
+  onVerified?: () => void
+  onPending?: (checkInId: string) => void
   /** Defaults to /api/face/verify. Pass /api/face/checkin to log a gym entry. */
   apiEndpoint?: string
 }
 
-type Phase = 'idle' | 'loading-cam' | 'scanning' | 'verifying' | 'success' | 'fail' | 'error'
+type Phase = 'idle' | 'loading-cam' | 'scanning' | 'verifying' | 'success' | 'pending' | 'fail' | 'error'
 
-export default function FaceVerify({ token, onVerified, apiEndpoint = '/api/face/verify' }: Props) {
+export default function FaceVerify({ token, onVerified, onPending, apiEndpoint = '/api/face/verify' }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const modelState = useFaceApi()
@@ -55,7 +56,6 @@ export default function FaceVerify({ token, onVerified, apiEndpoint = '/api/face
       .withFaceDescriptor()
 
     if (!detection) {
-      // Keep scanning
       scanLoopRef.current = setTimeout(scanLoop, 600)
       return
     }
@@ -72,15 +72,18 @@ export default function FaceVerify({ token, onVerified, apiEndpoint = '/api/face
       })
       const data = await res.json()
 
-      if (res.ok && data.verified) {
+      if (res.ok && data.pending) {
+        setPhase('pending')
+        onPending?.(data.checkInId)
+      } else if (res.ok && data.verified) {
         setPhase('success')
-        setTimeout(onVerified, 1200)
+        setTimeout(() => onVerified?.(), 1200)
       } else if (res.status === 404) {
         setPhase('error')
         setMessage('No face enrolled. Please enroll from your Profile page first.')
       } else {
         setPhase('fail')
-        setMessage('Face not recognised. Try again or use QR code.')
+        setMessage(data.error || 'Face not recognised. Try again or use QR code.')
       }
     } catch {
       setPhase('error')
@@ -139,7 +142,6 @@ export default function FaceVerify({ token, onVerified, apiEndpoint = '/api/face
               className="w-full aspect-[4/3] object-cover"
             />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              {/* Scanning frame */}
               <div className="w-44 h-52 border-2 border-green-400 rounded-3xl opacity-70" />
             </div>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-black/60 rounded-full text-xs text-white/80">
@@ -169,6 +171,24 @@ export default function FaceVerify({ token, onVerified, apiEndpoint = '/api/face
           <CheckCircle size={36} className="text-green-500" />
           <p className="text-base font-semibold text-gray-900">Identity verified!</p>
           <p className="text-xs text-gray-400">Logging you in…</p>
+        </div>
+      )}
+
+      {phase === 'pending' && (
+        <div className="flex flex-col items-center gap-3 py-4 text-center">
+          <div className="w-14 h-14 bg-yellow-50 rounded-full flex items-center justify-center">
+            <Clock size={28} className="text-yellow-500" />
+          </div>
+          <p className="text-base font-semibold text-gray-900">Awaiting Approval</p>
+          <p className="text-xs text-gray-500 max-w-xs">
+            Face verified. Your check-in request has been sent to an admin for approval.
+          </p>
+          <button
+            onClick={reset}
+            className="mt-2 px-5 py-2 text-xs font-medium text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50"
+          >
+            Done
+          </button>
         </div>
       )}
 
