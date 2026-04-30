@@ -120,7 +120,7 @@ async function main() {
     },
     {
       name: 'Pilates Core',
-      description: 'Strengthen your core, improve posture and flexibility with classic pilates movements.',
+      description: 'Strengthe your core, improve posture and flexibility with classic pilates movements.',
       difficulty: Difficulty.BEGINNER,
       isPro: false,
       location: 'Yoga Room',
