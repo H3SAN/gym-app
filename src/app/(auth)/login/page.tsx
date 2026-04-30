@@ -38,7 +38,7 @@ export default function LoginPage() {
       }
 
       login(data.token, data.user as AuthUser)
-      router.replace('/dashboard')
+      router.replace(data.user?.role === 'ADMIN' ? '/admin' : '/dashboard')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {

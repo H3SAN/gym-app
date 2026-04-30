@@ -37,7 +37,14 @@ export default function FaceVerify({ token, onVerified, onPending, apiEndpoint =
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
       streamRef.current = stream
-      if (videoRef.current) videoRef.current.srcObject = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        await new Promise<void>((resolve) => {
+          videoRef.current!.onloadedmetadata = () => {
+            videoRef.current!.play().then(resolve).catch(resolve)
+          }
+        })
+      }
       setPhase('scanning')
       scanLoop()
     } catch {
